@@ -22,10 +22,13 @@ steps:
 - script: 'rake install'
   displayName: 'generate gem'
 
+- script: 'ls -la && cd pkg && ls -la'
+  displayName: 'debug'
+
 - task: CopyFiles@2
   displayName: 'copy generated gem to artifacts folder'
   inputs:
-    Contents: './pkg/*.gem'
+    Contents: 'pkg/**'
     TargetFolder: '$(build.artifactstagingdirectory)'
 
 - task: PublishBuildArtifacts@1
