@@ -11,10 +11,27 @@ steps:
   inputs:
     versionSpec: '>= 2.5'
 
-- script: |
+- task: bash
+  script: |
     gem install bundler
     bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
-- script: bundle exec rake
+- task: bash
+  script: bundle exec rake
   displayName: 'bundle exec rake'
+
+- task: bash
+  script: 'rake install'
+  displayName: 'generate gem'
+
+- task: CopyFiles@2
+  displayName: 'copy generated gem to artifacts folder'
+  inputs:
+    Contents: './pkg/*.gem'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: fastlane-plugin-appcenter.gem'
+  inputs:
+    ArtifactName: 'fastlane-plugin-appcenter'
